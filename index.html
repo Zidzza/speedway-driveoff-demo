@@ -1,458 +1,852 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="theme-color" content="#0F1115">
-<title>Speedway · Drive-Off Watch</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#0B0B0B" />
+<title>Speedway · Drive-Off Register</title>
 <style>
   :root{
-    --red:#D0021B;
-    --red-dark:#A80016;
-    --red-glow:rgba(208,2,27,.35);
-    --ink:#0F1115;
-    --ink-2:#171A20;
-    --ink-3:#1F232B;
-    --line:#2A2F3A;
-    --text:#F4F6FA;
-    --muted:#9AA3B2;
-    --green:#1FA463;
-    --green-bg:rgba(31,164,99,.12);
-    --amber:#E8A317;
-    --radius:16px;
-    --shadow:0 10px 40px rgba(0,0,0,.45);
+    --red:#C8102E; --red-dark:#9E0C24; --yellow:#FFC72C; --ink:#0B0B0B;
+    --grey-1:#1A1A1A; --grey-5:#EDEDED; --bg:#F5F5F7; --card:#FFFFFF;
+    --green:#1FB55C; --amber:#E8A100;
+    --text:#0B0B0B; --muted:#6B6B70; --line:#E6E6EA;
+    --shadow:0 10px 40px rgba(0,0,0,.14);
+    --radius:18px;
+    --font:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,sans-serif;
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   html,body{margin:0;padding:0}
   body{
-    background:radial-gradient(1200px 600px at 50% -10%, #1a1d24 0%, var(--ink) 55%) fixed;
+    font-family:var(--font);
+    background:
+      radial-gradient(1200px 600px at 50% -10%, #ffffff 0%, var(--bg) 55%) fixed,
+      var(--bg);
     color:var(--text);
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-    min-height:100vh;
     -webkit-font-smoothing:antialiased;
-    line-height:1.45;
+    text-rendering:optimizeLegibility;
+    min-height:100vh;
+    padding:max(env(safe-area-inset-top),18px) 14px 40px;
+    display:flex; justify-content:center;
   }
-  .app{max-width:480px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column}
 
-  /* ---------- top bar ---------- */
+  /* ====== APP COLUMN ====== */
+  .app{
+    width:100%; max-width:480px; position:relative;
+    background:var(--card);
+    border-radius:30px;
+    box-shadow:var(--shadow);
+    overflow:hidden;
+    border:1px solid rgba(0,0,0,.04);
+  }
+
+  /* ====== TOP BAR ====== */
   .topbar{
-    display:flex;align-items:center;gap:10px;
-    padding:18px 20px 14px;
-    position:sticky;top:0;z-index:30;
-    background:linear-gradient(180deg, rgba(15,17,21,.96), rgba(15,17,21,.78));
-    backdrop-filter:blur(12px);
-    border-bottom:1px solid var(--line);
+    background:var(--ink);
+    color:#fff;
+    padding:18px 18px 16px;
+    position:sticky; top:0; z-index:20;
+    display:flex; align-items:center; gap:12px;
   }
-  .logo{display:flex;align-items:center;gap:9px;font-weight:900;letter-spacing:.5px;font-size:20px}
-  .logo .mark{
-    width:30px;height:30px;border-radius:8px;
-    background:linear-gradient(135deg,var(--red),var(--red-dark));
-    display:flex;align-items:center;justify-content:center;
-    box-shadow:0 4px 14px var(--red-glow);
-    position:relative;overflow:hidden;
+  .flag{
+    width:38px;height:38px;border-radius:10px;flex:0 0 auto;
+    box-shadow:0 0 0 2px rgba(255,255,255,.10), 0 4px 12px rgba(0,0,0,.5);
+    overflow:hidden;background:#fff;
   }
-  .logo .mark::before{
-    content:"";position:absolute;left:-2px;top:50%;transform:translateY(-50%) skewX(-18deg);
-    width:7px;height:42px;background:rgba(255,255,255,.9);border-radius:2px;
-    box-shadow:11px 0 0 rgba(255,255,255,.55), 20px 0 0 rgba(255,255,255,.3);
+  .brandwrap{display:flex;flex-direction:column;line-height:1;min-width:0}
+  .wordmark{
+    font-weight:800;letter-spacing:1.5px;font-size:21px;color:#fff;
+    font-style:italic; transform:skewX(-6deg);
+    display:flex;align-items:center;
   }
-  .logo .word{color:var(--text)}
-  .logo .word b{color:var(--red)}
-  .topbar .tag{margin-left:auto;font-size:10px;font-weight:700;letter-spacing:1px;color:var(--muted);
-    border:1px solid var(--line);padding:4px 8px;border-radius:999px;text-transform:uppercase}
+  .wordmark .ed{color:var(--yellow)}
+  .subtitle{
+    margin-top:5px;font-size:11px;font-weight:600;letter-spacing:.6px;
+    color:#C9C9CE;text-transform:uppercase;
+  }
+  .topbar-actions{margin-left:auto;display:flex;align-items:center;gap:8px;flex:0 0 auto}
+  .demo-pill{
+    background:var(--yellow);color:#1a1300;font-weight:800;font-size:10px;
+    letter-spacing:1px;padding:5px 9px;border-radius:999px;
+    box-shadow:0 2px 8px rgba(255,199,44,.4);
+  }
+  .log-btn{
+    background:var(--red);color:#fff;border:none;cursor:pointer;
+    font-family:var(--font);font-weight:700;font-size:12.5px;
+    padding:9px 13px;border-radius:12px;display:flex;align-items:center;gap:6px;
+    box-shadow:0 4px 14px rgba(200,16,46,.45);
+    transition:transform .12s ease, background .15s ease, box-shadow .15s ease;
+  }
+  .log-btn:hover{background:var(--red-dark);transform:translateY(-1px)}
+  .log-btn:active{transform:scale(.96)}
+  .log-btn svg{width:14px;height:14px}
 
-  /* ---------- demo banner ---------- */
-  .demobar{
-    display:none;
-    font-size:12px;font-weight:600;text-align:center;
-    padding:8px 14px;color:#ffd9dd;
-    background:linear-gradient(90deg, rgba(208,2,27,.18), rgba(208,2,27,.30), rgba(208,2,27,.18));
-    border-bottom:1px solid rgba(208,2,27,.4);
-  }
-  .demobar.on{display:block}
+  /* red/yellow accent stripe under bar */
+  .stripe{height:4px;display:flex}
+  .stripe i{flex:1}
+  .stripe i:nth-child(1){background:var(--red)}
+  .stripe i:nth-child(2){background:var(--yellow)}
+  .stripe i:nth-child(3){background:var(--red)}
 
-  /* ---------- screens ---------- */
-  main{flex:1;position:relative}
-  .screen{display:none;padding:24px 20px 40px;animation:fade .45s cubic-bezier(.2,.7,.2,1)}
-  .screen.active{display:block}
-  @keyframes fade{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+  /* ====== BODY ====== */
+  .body{padding:18px 16px 22px}
 
-  /* ---------- search ---------- */
-  .hero{padding:18px 2px 6px}
-  .kicker{font-size:12px;font-weight:800;letter-spacing:2px;color:var(--red);text-transform:uppercase}
-  h1{font-size:28px;line-height:1.15;margin:8px 0 6px;font-weight:900;letter-spacing:-.4px}
-  .sub{color:var(--muted);font-size:14px;margin:0}
-  .searchwrap{margin-top:26px}
-  .plate{
-    position:relative;
-    background:linear-gradient(180deg,#fff,#eef1f5);
-    border-radius:14px;
-    padding:10px 10px 10px 14px;
-    box-shadow:var(--shadow), inset 0 0 0 3px #0F1115, inset 0 0 0 6px #fff;
-    display:flex;align-items:center;gap:10px;
+  /* ====== SEARCH ====== */
+  .searchwrap{position:relative;display:flex;gap:8px}
+  .searchfield{position:relative;flex:1}
+  .searchfield .mag{
+    position:absolute;left:14px;top:50%;transform:translateY(-50%);
+    width:18px;height:18px;color:var(--muted);pointer-events:none;
   }
-  .plate .au{display:flex;flex-direction:column;align-items:center;line-height:1;color:#0F1115;font-weight:800}
-  .plate .au .st{font-size:9px;letter-spacing:1px;color:var(--red)}
-  .plate .au .yr{font-size:13px;margin-top:2px}
-  .plate input{
-    flex:1;border:0;outline:0;background:transparent;
-    font-size:30px;font-weight:900;letter-spacing:5px;
-    text-transform:uppercase;color:#0F1115;width:100%;
-    font-family:"SF Mono",ui-monospace,Menlo,monospace;
+  #q{
+    width:100%;border:1.5px solid var(--line);background:#fff;
+    border-radius:14px;padding:15px 14px 15px 42px;
+    font-family:var(--font);font-size:16px;font-weight:600;color:var(--ink);
+    outline:none;transition:border-color .15s ease, box-shadow .15s ease;
+    text-transform:uppercase;letter-spacing:1px;
   }
-  .plate input::placeholder{color:#b9c0cb}
-  .btn{
-    width:100%;margin-top:14px;border:0;cursor:pointer;
-    background:linear-gradient(180deg,var(--red),var(--red-dark));
-    color:#fff;font-size:17px;font-weight:800;letter-spacing:.3px;
-    padding:16px;border-radius:14px;
-    box-shadow:0 8px 24px var(--red-glow);
-    transition:transform .12s ease, box-shadow .12s ease;
+  #q::placeholder{color:#B4B4BC;text-transform:none;letter-spacing:normal;font-weight:500}
+  #q:focus{border-color:var(--red);box-shadow:0 0 0 4px rgba(200,16,46,.12)}
+  .search-btn{
+    background:var(--ink);color:#fff;border:none;cursor:pointer;
+    border-radius:14px;padding:0 18px;font-weight:700;font-size:15px;
+    font-family:var(--font);transition:transform .12s ease, background .15s;
   }
-  .btn:active{transform:translateY(1px) scale(.995);box-shadow:0 4px 14px var(--red-glow)}
-  .hint{margin-top:16px;color:var(--muted);font-size:13px;text-align:center}
-  .examples{display:flex;gap:8px;justify-content:center;margin-top:14px;flex-wrap:wrap}
+  .search-btn:hover{background:var(--grey-1)}
+  .search-btn:active{transform:scale(.95)}
+
+  /* chips */
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;align-items:center}
+  .chips .lbl{font-size:12px;color:var(--muted);font-weight:600;margin-right:2px}
   .chip{
-    font-size:12px;font-weight:700;color:var(--text);
-    background:var(--ink-3);border:1px solid var(--line);
-    padding:7px 12px;border-radius:999px;cursor:pointer;transition:.15s;
+    background:var(--grey-5);border:1px solid var(--line);color:var(--ink);
+    font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+    font-weight:700;font-size:12.5px;letter-spacing:.5px;
+    padding:7px 11px;border-radius:999px;cursor:pointer;
+    transition:transform .12s ease, background .15s, border-color .15s;
   }
-  .chip:active{transform:scale(.96)}
-  .chip b{color:var(--red)}
-  .staffnote{margin-top:30px;text-align:center;color:var(--muted);font-size:12px}
+  .chip:hover{background:#fff;border-color:var(--red);transform:translateY(-1px)}
+  .chip:active{transform:scale(.95)}
+  .chip.star{background:#fff3d6;border-color:var(--yellow);color:#7a5b00}
 
-  /* ---------- result header cards ---------- */
-  .backrow{display:flex;align-items:center;gap:8px;margin-bottom:16px}
-  .back{
-    background:var(--ink-3);border:1px solid var(--line);color:var(--text);
-    font-size:13px;font-weight:700;padding:9px 14px;border-radius:999px;cursor:pointer;
-    display:inline-flex;align-items:center;gap:6px;transition:.15s;
+  /* ====== BANNER ====== */
+  .banner{
+    margin-top:16px;border-radius:14px;padding:14px 15px;
+    display:flex;gap:12px;align-items:flex-start;
+    animation:pop .28s cubic-bezier(.2,.8,.25,1) both;
   }
-  .back:active{transform:scale(.97)}
+  .banner .bicon{flex:0 0 auto;width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-size:18px}
+  .banner .btxt{line-height:1.35}
+  .banner .bt-title{font-weight:800;font-size:14.5px}
+  .banner .bt-sub{font-size:12.5px;opacity:.92;margin-top:2px}
+  .banner.danger{background:linear-gradient(180deg,#fde7eb,#fbd9df);color:#7c0a1c;border:1px solid #f3b7c1}
+  .banner.danger .bt-title{color:var(--red-dark)}
+  .banner.calm{background:#e6f7ee;color:#0c7a40;border:1px solid #bfe9d2}
+  .banner.calm .bt-title{color:#0c7a40}
 
-  .alert{
-    border-radius:var(--radius);padding:20px;margin-bottom:18px;position:relative;overflow:hidden;
-    background:linear-gradient(160deg,var(--red),var(--red-dark));
-    box-shadow:0 12px 36px var(--red-glow);
+  /* ====== RESULTS META ====== */
+  .resultmeta{margin-top:16px;font-size:12.5px;color:var(--muted);font-weight:600;display:flex;justify-content:space-between;align-items:center}
+  .resultmeta b{color:var(--ink)}
+
+  /* ====== CLEAR STATE ====== */
+  .clear-state{
+    margin-top:16px;text-align:center;padding:30px 20px;
+    background:#e9f9f0;border:1px solid #c5ecd6;border-radius:16px;
+    animation:pop .28s cubic-bezier(.2,.8,.25,1) both;
   }
-  .alert::after{content:"";position:absolute;inset:0;background:
-    repeating-linear-gradient(45deg, rgba(255,255,255,.05) 0 12px, transparent 12px 24px);pointer-events:none}
-  .alert .row1{display:flex;align-items:center;gap:8px;font-weight:900;font-size:15px}
-  .alert .plateBig{
-    font-family:"SF Mono",ui-monospace,Menlo,monospace;
-    font-size:38px;font-weight:900;letter-spacing:4px;margin:12px 0 4px;
-    background:#fff;color:#0F1115;display:inline-block;padding:6px 16px;border-radius:10px;
-    box-shadow:inset 0 0 0 3px #0F1115;
+  .clear-state .big{
+    width:62px;height:62px;border-radius:50%;background:var(--green);
+    display:flex;align-items:center;justify-content:center;margin:0 auto 12px;
+    box-shadow:0 8px 20px rgba(31,181,92,.4);
   }
-  .alert .stat{display:flex;gap:22px;margin-top:14px;flex-wrap:wrap}
-  .alert .stat .lab{font-size:11px;opacity:.85;text-transform:uppercase;letter-spacing:1px;font-weight:700}
-  .alert .stat .val{font-size:22px;font-weight:900;margin-top:2px}
-  .riskbadge{
-    position:absolute;top:18px;right:18px;
-    background:#0F1115;color:#fff;font-size:11px;font-weight:900;letter-spacing:1px;
-    padding:6px 11px;border-radius:999px;border:1px solid rgba(255,255,255,.25);
+  .clear-state .big svg{width:32px;height:32px;color:#fff}
+  .clear-state h3{margin:0 0 4px;color:#0c7a40;font-size:17px}
+  .clear-state p{margin:0;color:#3f7d5b;font-size:13px;font-weight:500}
+  .clear-state .rego-echo{
+    font-family:ui-monospace,Menlo,monospace;font-weight:800;color:#0b5e33;
   }
 
-  .clean{
-    border-radius:var(--radius);padding:24px 20px;margin-bottom:18px;text-align:center;
-    background:linear-gradient(160deg, rgba(31,164,99,.16), rgba(31,164,99,.05));
-    border:1px solid rgba(31,164,99,.4);
+  /* ====== EMPTY HINT ====== */
+  .empty-hint{
+    margin-top:18px;text-align:center;color:var(--muted);
+    padding:26px 18px;border:1.5px dashed var(--line);border-radius:16px;
+    font-size:13.5px;font-weight:500;
   }
-  .clean .check{
-    width:60px;height:60px;border-radius:50%;margin:0 auto 14px;
-    background:var(--green);display:flex;align-items:center;justify-content:center;
-    font-size:30px;color:#fff;box-shadow:0 8px 24px rgba(31,164,99,.4);
-  }
-  .clean h2{margin:0 0 6px;font-size:20px;font-weight:900}
-  .clean .plateBigC{font-family:"SF Mono",ui-monospace,Menlo,monospace;color:var(--green);font-weight:900}
-  .clean p{color:var(--muted);font-size:14px;margin:6px 0 0}
+  .empty-hint svg{width:30px;height:30px;color:#c9c9d2;margin-bottom:8px}
 
-  /* ---------- section + incident cards ---------- */
-  .sechead{display:flex;align-items:center;gap:8px;margin:22px 2px 12px;font-size:13px;
-    font-weight:800;letter-spacing:1px;color:var(--muted);text-transform:uppercase}
-  .sechead::after{content:"";flex:1;height:1px;background:var(--line)}
-
+  /* ====== RECORD CARD ====== */
+  .cards{display:flex;flex-direction:column;gap:12px;margin-top:12px}
   .card{
-    background:var(--ink-2);border:1px solid var(--line);border-radius:var(--radius);
-    padding:16px;margin-bottom:12px;box-shadow:0 6px 20px rgba(0,0,0,.25);
-    transition:.18s;
+    background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    overflow:hidden;box-shadow:0 4px 18px rgba(0,0,0,.05);
+    animation:pop .3s cubic-bezier(.2,.8,.25,1) both;
   }
-  .card.out{border-left:4px solid var(--red)}
-  .card.paid{border-left:4px solid var(--green)}
-  .card .ch{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
-  .card .site{font-weight:800;font-size:16px}
-  .card .date{color:var(--muted);font-size:12.5px;margin-top:2px}
-  .badge{font-size:11px;font-weight:900;letter-spacing:.5px;padding:5px 10px;border-radius:999px;white-space:nowrap}
-  .badge.out{background:rgba(208,2,27,.15);color:#ff8a96;border:1px solid rgba(208,2,27,.45)}
-  .badge.paid{background:var(--green-bg);color:#5fd79b;border:1px solid rgba(31,164,99,.45)}
-  .card .meta{display:flex;gap:18px;margin-top:14px;flex-wrap:wrap}
-  .card .meta .lab{font-size:10.5px;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);font-weight:700}
-  .card .meta .v{font-size:15px;font-weight:700;margin-top:2px}
-  .card .meta .v.amt{color:var(--red);font-size:18px;font-weight:900}
-  .card.paid .meta .v.amt{color:var(--green)}
-  .card .notes{
-    margin-top:14px;padding:10px 12px;background:var(--ink);border-radius:10px;
-    font-size:13px;color:#c7cdd8;border:1px solid var(--line);
+  .card-head{
+    padding:14px;display:flex;gap:13px;align-items:center;cursor:pointer;
+    transition:background .15s;
   }
-  .card .notes b{color:var(--muted);font-weight:700}
+  .card-head:hover{background:#fafafb}
+  .card-head:active{background:#f3f3f5}
 
-  /* ---------- action buttons ---------- */
-  .actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:20px}
-  .abtn{
-    border:1px solid var(--line);background:var(--ink-3);color:var(--muted);
-    font-size:14px;font-weight:700;padding:14px 10px;border-radius:12px;
-    cursor:not-allowed;opacity:.65;display:flex;align-items:center;justify-content:center;gap:7px;
-    position:relative;
+  /* plate */
+  .plate{
+    flex:0 0 auto;background:var(--ink);border:2px solid #2a2a2a;border-radius:9px;
+    padding:7px 10px 6px;text-align:center;box-shadow:inset 0 0 0 2px #000, 0 3px 8px rgba(0,0,0,.25);
+    min-width:92px;
   }
-  .abtn.primary{background:rgba(208,2,27,.12);border-color:rgba(208,2,27,.35);color:#ff9aa4}
-  .disabled-note{text-align:center;color:var(--muted);font-size:12px;margin-top:12px;font-style:italic}
+  .plate .st{font-size:7px;color:var(--yellow);font-weight:800;letter-spacing:1.5px;line-height:1}
+  .plate .num{
+    font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+    color:var(--yellow);font-weight:800;font-size:19px;letter-spacing:2px;line-height:1.15;margin-top:2px;
+  }
 
-  /* ---------- log form (mockup) ---------- */
-  .field{margin-bottom:14px}
-  .field label{display:block;font-size:12px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+  .card-info{flex:1;min-width:0}
+  .card-info .desc{font-weight:700;font-size:15px;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .card-info .sub{font-size:12px;color:var(--muted);margin-top:3px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+  .dot{width:3px;height:3px;border-radius:50%;background:#cfcfd6;display:inline-block}
+
+  .card-right{flex:0 0 auto;display:flex;flex-direction:column;align-items:flex-end;gap:7px}
+
+  .badge{
+    font-size:10.5px;font-weight:800;letter-spacing:.4px;padding:5px 9px;border-radius:999px;
+    white-space:nowrap;text-transform:uppercase;
+  }
+  .badge.unresolved{background:#fbe0e5;color:var(--red);border:1px solid #f3c0ca}
+  .badge.paid{background:#dff5e8;color:#0c7a40;border:1px solid #bfe9d2}
+  .badge.cleared{background:#ededf0;color:#6b6b70;border:1px solid #e0e0e5}
+
+  .amount{font-weight:800;font-size:15px;color:var(--ink);font-variant-numeric:tabular-nums}
+  .amount.zero{color:var(--green)}
+  .chev{width:18px;height:18px;color:#bbb;transition:transform .28s cubic-bezier(.2,.8,.25,1)}
+  .card.open .chev{transform:rotate(180deg)}
+
+  /* expandable timeline */
+  .timeline-wrap{
+    display:grid;grid-template-rows:0fr;transition:grid-template-rows .32s cubic-bezier(.2,.8,.25,1);
+  }
+  .card.open .timeline-wrap{grid-template-rows:1fr}
+  .timeline-inner{overflow:hidden}
+  .timeline{
+    border-top:1px solid var(--line);background:#fbfbfc;padding:14px 14px 6px;
+  }
+  .tl-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+  .tl-head .t{font-size:12px;font-weight:800;letter-spacing:.5px;color:var(--muted);text-transform:uppercase}
+  .tl-head .sites{font-size:11.5px;color:var(--muted);font-weight:600}
+
+  .incident{
+    display:flex;gap:12px;padding:12px 0;border-bottom:1px solid #eee;position:relative;
+  }
+  .incident:last-child{border-bottom:none}
+  .photo-thumb{
+    flex:0 0 auto;width:58px;height:58px;border-radius:11px;overflow:hidden;
+    background:#dfe1e6;display:flex;align-items:flex-end;justify-content:center;
+    box-shadow:inset 0 0 0 1px rgba(0,0,0,.06);position:relative;
+  }
+  .photo-thumb .cam{
+    position:absolute;top:4px;right:4px;background:rgba(0,0,0,.55);color:#fff;
+    font-size:7px;font-weight:700;letter-spacing:.5px;padding:2px 4px;border-radius:4px;
+  }
+  .inc-body{flex:1;min-width:0}
+  .inc-top{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+  .inc-site{font-weight:800;font-size:13.5px;color:var(--ink)}
+  .inc-amt{font-weight:800;font-size:13.5px;color:var(--red);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .inc-amt.paid{color:#0c7a40}
+  .inc-meta{font-size:11.5px;color:var(--muted);margin-top:3px;display:flex;flex-wrap:wrap;gap:5px;align-items:center}
+  .inc-note{
+    font-size:12.5px;color:#3a3a40;margin-top:7px;background:#fff;border:1px solid var(--line);
+    border-radius:9px;padding:8px 10px;line-height:1.4;
+  }
+  .inc-status{display:inline-flex;font-size:9.5px;font-weight:800;letter-spacing:.4px;padding:3px 7px;border-radius:6px;text-transform:uppercase}
+  .inc-status.unresolved{background:#fbe0e5;color:var(--red)}
+  .inc-status.paid{background:#dff5e8;color:#0c7a40}
+
+  .tl-total{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:12px 2px 14px;margin-top:4px;
+  }
+  .tl-total .lab{font-size:13px;font-weight:700;color:var(--muted)}
+  .tl-total .val{font-size:18px;font-weight:800;color:var(--ink)}
+
+  /* ====== FOOTER ====== */
+  .footer{
+    text-align:center;padding:20px 18px 4px;color:#9a9aa2;font-size:11px;line-height:1.6;
+  }
+  .footer b{color:#7a7a82}
+
+  /* ====== MODAL ====== */
+  .overlay{
+    position:fixed;inset:0;background:rgba(11,11,11,.55);backdrop-filter:blur(3px);
+    z-index:60;display:flex;align-items:flex-end;justify-content:center;
+    opacity:0;pointer-events:none;transition:opacity .25s ease;padding:0;
+  }
+  .overlay.show{opacity:1;pointer-events:auto}
+  .modal{
+    width:100%;max-width:480px;background:var(--card);
+    border-radius:24px 24px 0 0;padding:8px 18px max(env(safe-area-inset-bottom),22px);
+    transform:translateY(100%);transition:transform .32s cubic-bezier(.2,.85,.25,1);
+    max-height:92vh;overflow-y:auto;box-shadow:0 -10px 40px rgba(0,0,0,.3);
+  }
+  .overlay.show .modal{transform:translateY(0)}
+  .grab{width:40px;height:5px;border-radius:3px;background:#dcdce2;margin:8px auto 6px}
+  .modal h2{margin:6px 2px 2px;font-size:20px}
+  .modal .msub{margin:0 2px 16px;color:var(--muted);font-size:13px}
+  .field{margin-bottom:13px}
+  .field label{display:block;font-size:12px;font-weight:700;color:var(--ink);margin-bottom:6px;letter-spacing:.2px}
   .field input,.field select,.field textarea{
-    width:100%;background:var(--ink-2);border:1px solid var(--line);border-radius:12px;
-    color:var(--text);font-size:15px;padding:13px 14px;outline:none;font-family:inherit;
+    width:100%;border:1.5px solid var(--line);border-radius:12px;padding:13px 13px;
+    font-family:var(--font);font-size:15px;color:var(--ink);background:#fff;outline:none;
+    transition:border-color .15s, box-shadow .15s;
   }
-  .field input:focus,.field select,.field textarea:focus{border-color:var(--red)}
-  .field textarea{resize:none;min-height:80px}
-  .uploadbtn{
-    width:100%;border:1.5px dashed var(--line);background:transparent;color:var(--muted);
-    padding:18px;border-radius:12px;font-weight:700;cursor:not-allowed;opacity:.7;
-    display:flex;align-items:center;justify-content:center;gap:8px;
+  .field input:focus,.field select:focus,.field textarea:focus{
+    border-color:var(--red);box-shadow:0 0 0 4px rgba(200,16,46,.1)
   }
-  .openlog{
-    display:inline-flex;align-items:center;gap:7px;margin-top:8px;
-    background:transparent;border:1px solid var(--line);color:var(--muted);
-    font-size:13px;font-weight:700;padding:11px 16px;border-radius:999px;cursor:pointer;transition:.15s;
+  .field textarea{resize:none;min-height:64px}
+  .row2{display:flex;gap:11px}
+  .row2 .field{flex:1}
+  .uploader{
+    border:1.6px dashed var(--line);border-radius:12px;padding:18px;text-align:center;
+    color:var(--muted);font-size:13px;font-weight:600;cursor:pointer;background:#fafafb;
+    transition:border-color .15s, background .15s;
   }
-  .openlog:active{transform:scale(.97)}
+  .uploader:hover{border-color:var(--red);background:#fff}
+  .uploader svg{width:26px;height:26px;color:#c2c2cc;margin-bottom:6px}
+  .uploader.has{border-style:solid;border-color:var(--green);color:#0c7a40;background:#f0fbf5}
+  .modal-actions{display:flex;gap:11px;margin-top:8px}
+  .btn{
+    flex:1;border:none;border-radius:13px;padding:15px;font-family:var(--font);
+    font-weight:700;font-size:15px;cursor:pointer;transition:transform .12s, background .15s;
+  }
+  .btn:active{transform:scale(.97)}
+  .btn-ghost{background:var(--grey-5);color:var(--ink)}
+  .btn-ghost:hover{background:#e3e3e8}
+  .btn-primary{background:var(--red);color:#fff;box-shadow:0 6px 18px rgba(200,16,46,.4)}
+  .btn-primary:hover{background:var(--red-dark)}
 
-  /* ---------- footer ---------- */
-  footer{
-    text-align:center;padding:22px 20px 30px;color:var(--muted);font-size:11.5px;
-    border-top:1px solid var(--line);margin-top:auto;letter-spacing:.3px;
+  /* ====== TOAST ====== */
+  .toast{
+    position:fixed;left:50%;bottom:30px;transform:translate(-50%,80px);
+    background:var(--ink);color:#fff;padding:14px 20px;border-radius:14px;
+    font-weight:600;font-size:14px;display:flex;align-items:center;gap:10px;
+    box-shadow:0 12px 36px rgba(0,0,0,.4);z-index:80;opacity:0;
+    transition:transform .35s cubic-bezier(.2,.85,.25,1), opacity .3s;max-width:90vw;
   }
-  footer b{color:#c7cdd8;font-weight:700}
-  .lock{opacity:.7}
+  .toast.show{transform:translate(-50%,0);opacity:1}
+  .toast .tcheck{
+    width:22px;height:22px;border-radius:50%;background:var(--green);flex:0 0 auto;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .toast .tcheck svg{width:13px;height:13px;color:#fff}
+
+  @keyframes pop{from{opacity:0;transform:translateY(8px) scale(.98)}to{opacity:1;transform:none}}
+
+  /* reduced motion */
+  @media (prefers-reduced-motion:reduce){
+    *{animation-duration:.01ms !important;transition-duration:.01ms !important}
+  }
 </style>
 </head>
 <body>
-<div class="app">
+  <div class="app" role="application" aria-label="Speedway Drive-Off Register">
 
-  <div class="topbar">
-    <div class="logo">
-      <span class="mark"></span>
-      <span class="word">SPEED<b>WAY</b></span>
-    </div>
-    <span class="tag">Network Tool</span>
+    <!-- TOP BAR -->
+    <header class="topbar">
+      <div class="flag" aria-hidden="true">
+        <!-- checkered flag SVG -->
+        <svg viewBox="0 0 38 38" width="38" height="38" role="img">
+          <rect width="38" height="38" fill="#fff"/>
+          <g fill="#0B0B0B">
+            <rect x="0"  y="0"  width="9.5" height="9.5"/>
+            <rect x="19" y="0"  width="9.5" height="9.5"/>
+            <rect x="9.5" y="9.5" width="9.5" height="9.5"/>
+            <rect x="28.5" y="9.5" width="9.5" height="9.5"/>
+            <rect x="0"  y="19" width="9.5" height="9.5"/>
+            <rect x="19" y="19" width="9.5" height="9.5"/>
+            <rect x="9.5" y="28.5" width="9.5" height="9.5"/>
+            <rect x="28.5" y="28.5" width="9.5" height="9.5"/>
+          </g>
+        </svg>
+      </div>
+      <div class="brandwrap">
+        <div class="wordmark">SPE<span class="ed">EDWAY</span></div>
+        <div class="subtitle">Drive-Off Register</div>
+      </div>
+      <div class="topbar-actions">
+        <span class="demo-pill" title="Sample data only">DEMO</span>
+        <button class="log-btn" id="openLog" aria-label="Log a drive-off">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+          Log
+        </button>
+      </div>
+    </header>
+    <div class="stripe" aria-hidden="true"><i></i><i></i><i></i></div>
+
+    <!-- BODY -->
+    <main class="body">
+
+      <!-- SEARCH -->
+      <div class="searchwrap">
+        <div class="searchfield">
+          <svg class="mag" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+          <input id="q" type="text" inputmode="text" autocomplete="off" autocapitalize="characters"
+                 placeholder="Search a rego…" aria-label="Search a registration plate" />
+        </div>
+        <button class="search-btn" id="searchBtn">Search</button>
+      </div>
+
+      <div class="chips" aria-label="Sample plates to try">
+        <span class="lbl">Try:</span>
+        <button class="chip star" data-rego="WXY999">WXY999</button>
+        <button class="chip" data-rego="ABC123">ABC123</button>
+        <button class="chip" data-rego="1AB2CD">1AB2CD</button>
+        <button class="chip" data-rego="TRUCK01">TRUCK01</button>
+      </div>
+
+      <!-- dynamic output -->
+      <div id="output"></div>
+
+    </main>
+
+    <footer class="footer">
+      <b>Demo — sample data only. Not real records.</b><br/>
+      © Speedway · Drive-Off Register concept
+    </footer>
   </div>
 
-  <div class="demobar" id="demobar">⚠ This is a demo — no real data is stored or transmitted.</div>
+  <!-- MODAL -->
+  <div class="overlay" id="overlay">
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Log a drive-off">
+      <div class="grab"></div>
+      <h2>Log a drive-off</h2>
+      <p class="msub">Record a new incident. Demo only — nothing is sent anywhere.</p>
 
-  <main>
-
-    <!-- ===================== SEARCH ===================== -->
-    <section class="screen active" id="screen-search">
-      <div class="hero">
-        <div class="kicker">Drive-Off Watch</div>
-        <h1>Network Search</h1>
-        <p class="sub">Check any registration plate against drive-off incidents recorded across the Speedway network.</p>
+      <div class="field">
+        <label for="f-rego">Registration plate</label>
+        <input id="f-rego" type="text" placeholder="e.g. 1XY2ZA" autocapitalize="characters" autocomplete="off"/>
       </div>
-
-      <div class="searchwrap">
-        <div class="plate">
-          <div class="au"><span class="st">★ AUS ★</span><span class="yr">REGO</span></div>
-          <input id="regoInput" maxlength="8" placeholder="ABC123" autocomplete="off" autocapitalize="characters" spellcheck="false" inputmode="text">
-        </div>
-        <button class="btn" id="searchBtn">Search the Network</button>
-        <p class="hint">Search across the Speedway network. <b style="color:#c7cdd8">Staff use only.</b></p>
-        <div class="examples">
-          <span class="chip" data-rego="1ABC234">Try <b>1ABC234</b></span>
-          <span class="chip" data-rego="XYZ999">Try <b>XYZ999</b></span>
-        </div>
+      <div class="field">
+        <label for="f-desc">Vehicle description</label>
+        <input id="f-desc" type="text" placeholder="e.g. Silver Holden Commodore"/>
       </div>
-
-      <p class="staffnote">🔒 Authorised Speedway staff only · Activity is logged</p>
-    </section>
-
-    <!-- ===================== OFFENDER ===================== -->
-    <section class="screen" id="screen-offender">
-      <div class="backrow"><button class="back" data-back>‹ New search</button></div>
-
-      <div class="alert">
-        <span class="riskbadge">⬤ HIGH RISK</span>
-        <div class="row1">⚠ Known Offender — 3 incidents on record</div>
-        <div class="plateBig" id="offPlate">1ABC234</div>
-        <div class="stat">
-          <div><div class="lab">Outstanding balance</div><div class="val">$127.40</div></div>
-          <div><div class="lab">Across network</div><div class="val">3 sites</div></div>
+      <div class="row2">
+        <div class="field">
+          <label for="f-amt">Amount ($)</label>
+          <input id="f-amt" type="number" min="0" step="0.01" placeholder="65.00"/>
+        </div>
+        <div class="field">
+          <label for="f-site">Site</label>
+          <select id="f-site">
+            <option>Sunshine</option>
+            <option>Pascoe Vale</option>
+            <option>Williamstown</option>
+          </select>
         </div>
       </div>
-
-      <div class="sechead">Incident History</div>
-
-      <!-- Incident 1 -->
-      <div class="card out">
-        <div class="ch">
-          <div><div class="site">Speedway Morayfield</div><div class="date">14 May 2026 · 7:42am</div></div>
-          <span class="badge out">OUTSTANDING</span>
+      <div class="field">
+        <label>Photo / CCTV still</label>
+        <div class="uploader" id="uploader">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L8 6H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-4l-1.5-2Z"/><circle cx="12" cy="13" r="3.2"/></svg>
+          <div id="uploaderText">Tap to attach a photo (placeholder)</div>
         </div>
-        <div class="meta">
-          <div><div class="lab">Amount</div><div class="v amt">$62.30</div></div>
-          <div><div class="lab">Vehicle</div><div class="v">White Toyota Camry · 2018</div></div>
-        </div>
-        <div class="notes"><b>Notes · </b>Left before attendant could stop. Bowser 3.</div>
       </div>
-
-      <!-- Incident 2 -->
-      <div class="card out">
-        <div class="ch">
-          <div><div class="site">Speedway North Lakes</div><div class="date">2 Mar 2026 · 6:15pm</div></div>
-          <span class="badge out">OUTSTANDING</span>
-        </div>
-        <div class="meta">
-          <div><div class="lab">Amount</div><div class="v amt">$41.10</div></div>
-          <div><div class="lab">Vehicle</div><div class="v">White Toyota Camry</div></div>
-        </div>
-        <div class="notes"><b>Notes · </b>Drove off at speed. Plate confirmed on CCTV.</div>
+      <div class="field">
+        <label for="f-notes">Notes</label>
+        <textarea id="f-notes" placeholder="Pump #, time, staff on shift, description of driver…"></textarea>
       </div>
-
-      <!-- Incident 3 -->
-      <div class="card paid">
-        <div class="ch">
-          <div><div class="site">Speedway Caboolture</div><div class="date">18 Jan 2026 · 11:05am</div></div>
-          <span class="badge paid">PAID ✓</span>
-        </div>
-        <div class="meta">
-          <div><div class="lab">Amount</div><div class="v amt">$24.00</div></div>
-          <div><div class="lab">Vehicle</div><div class="v">White Camry · plate confirmed</div></div>
-        </div>
-        <div class="notes"><b>Notes · </b>Customer returned and paid in full. 20 Jan 2026.</div>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" id="cancelLog">Cancel</button>
+        <button class="btn btn-primary" id="saveLog">Save incident</button>
       </div>
+    </div>
+  </div>
 
-      <div class="actions">
-        <button class="abtn primary" disabled>＋ Log New Incident</button>
-        <button class="abtn" disabled>✓ Mark as Paid</button>
-        <button class="abtn" disabled>🚓 Police Report</button>
-        <button class="abtn" disabled>⚑ Flag Resolved</button>
-      </div>
-      <p class="disabled-note">Demo mode — actions disabled</p>
-
-      <div style="text-align:center;margin-top:18px">
-        <button class="openlog" data-open-log>View incident logging form ›</button>
-      </div>
-    </section>
-
-    <!-- ===================== CLEAN ===================== -->
-    <section class="screen" id="screen-clean">
-      <div class="backrow"><button class="back" data-back>‹ New search</button></div>
-
-      <div class="clean">
-        <div class="check">✓</div>
-        <h2>No incidents found</h2>
-        <div style="font-size:17px;font-weight:800;margin-bottom:4px">for <span class="plateBigC" id="cleanPlate">XYZ999</span></div>
-        <p>This plate has no recorded drive-offs on the Speedway network.</p>
-      </div>
-
-      <div class="card" style="text-align:center">
-        <p style="margin:0 0 14px;color:var(--muted);font-size:14px">If you're logging a new incident for this plate, tap below.</p>
-        <button class="abtn primary" disabled style="cursor:not-allowed">＋ Log New Incident</button>
-        <p class="disabled-note" style="margin-top:14px">Demo mode — actions disabled</p>
-      </div>
-
-      <div style="text-align:center;margin-top:18px">
-        <button class="openlog" data-open-log>View incident logging form ›</button>
-      </div>
-    </section>
-
-    <!-- ===================== LOG FORM (mockup) ===================== -->
-    <section class="screen" id="screen-log">
-      <div class="backrow"><button class="back" data-back>‹ Back</button></div>
-      <div class="kicker">Drive-Off Watch</div>
-      <h1 style="font-size:24px;margin-bottom:18px">Log New Incident</h1>
-
-      <div class="field"><label>Registration plate</label><input value="1ABC234" readonly></div>
-      <div class="field"><label>Site</label>
-        <select disabled>
-          <option>Speedway Morayfield</option>
-          <option>Speedway North Lakes</option>
-          <option>Speedway Caboolture</option>
-          <option>Speedway Burpengary</option>
-        </select>
-      </div>
-      <div class="field"><label>Date &amp; time</label><input value="12 Jun 2026 · 2:30pm" readonly></div>
-      <div class="field"><label>Amount ($)</label><input value="58.40" readonly></div>
-      <div class="field"><label>Vehicle description</label><input value="White Toyota Camry" readonly></div>
-      <div class="field"><label>Photo / CCTV upload</label>
-        <button class="uploadbtn" disabled>📷 Tap to attach photo</button>
-      </div>
-      <div class="field"><label>Notes</label><textarea readonly>Drove off without paying. Bowser 2.</textarea></div>
-      <button class="abtn primary" disabled style="width:100%;margin-top:6px">Submit Incident</button>
-      <p class="disabled-note">Demo mode — form is read-only</p>
-    </section>
-
-  </main>
-
-  <footer>
-    <div>Speedway Fuel Network · <b>Confidential</b></div>
-    <div style="margin-top:6px" class="lock">🔒 For authorised staff use only</div>
-  </footer>
-</div>
+  <!-- TOAST -->
+  <div class="toast" id="toast">
+    <span class="tcheck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg></span>
+    <span id="toastText">Saved</span>
+  </div>
 
 <script>
-  var screens = {
-    search:   document.getElementById('screen-search'),
-    offender: document.getElementById('screen-offender'),
-    clean:    document.getElementById('screen-clean'),
-    log:      document.getElementById('screen-log')
-  };
-  var demobar = document.getElementById('demobar');
-  var input = document.getElementById('regoInput');
+(function(){
+  "use strict";
 
-  function show(name){
-    for(var k in screens){ screens[k].classList.remove('active'); }
-    screens[name].classList.add('active');
-    demobar.classList.toggle('on', name !== 'search');
-    window.scrollTo({top:0, behavior:'smooth'});
-  }
-
-  function runSearch(){
-    var raw = (input.value || '').toUpperCase().replace(/\s+/g,'').trim();
-    if(!raw){ input.focus(); return; }
-    // Simple string match: anything containing ABC -> known offender
-    if(raw.indexOf('ABC') !== -1){
-      document.getElementById('offPlate').textContent = raw;
-      show('offender');
-    } else {
-      document.getElementById('cleanPlate').textContent = raw;
-      show('clean');
+  /* ============ SAMPLE DATA (fictional) ============ */
+  // status: "unresolved" | "paid" | "cleared"
+  var DATA = [
+    {
+      rego:"WXY999", desc:"White Toyota Hilux", colourSvg:"#f3f4f6",
+      status:"unresolved",
+      incidents:[
+        {date:"2026-05-28", site:"Sunshine",     amount:72.40, pump:"Pump 4", paid:false, note:"Filled 52L of diesel, drove off without paying. Front plate clearly visible on forecourt camera.", tone:"#5b6b7e"},
+        {date:"2026-04-15", site:"Pascoe Vale",   amount:64.10, pump:"Pump 2", paid:false, note:"Same vehicle, same MO. Reversed up to the bowser to obscure rear plate. Staff recognised the dent on the tailgate.", tone:"#6e5b7e"},
+        {date:"2026-03-02", site:"Williamstown",  amount:43.50, pump:"Pump 6", paid:false, note:"Third site in the chain. Driver wore a hi-vis and a cap. Logged with Vic Police, report #DEMO-4471.", tone:"#7e6b5b"}
+      ]
+    },
+    {
+      rego:"ABC123", desc:"Silver Holden Commodore", colourSvg:"#e9eaef",
+      status:"unresolved",
+      incidents:[
+        {date:"2026-06-04", site:"Pascoe Vale", amount:55.00, pump:"Pump 1", paid:false, note:"Premium unleaded, $55. Drove off toward the freeway on-ramp. Plate confirmed on CCTV.", tone:"#5b6b7e"}
+      ]
+    },
+    {
+      rego:"1AB2CD", desc:"Blue Ford Ranger", colourSvg:"#e3ecf5",
+      status:"paid",
+      incidents:[
+        {date:"2026-05-10", site:"Williamstown", amount:88.20, pump:"Pump 3", paid:true, note:"Driver returned 2 days later and paid in full — said card declined and they panicked. Marked resolved.", tone:"#5b7e6b"}
+      ]
+    },
+    {
+      rego:"TRUCK01", desc:"White Isuzu flatbed truck", colourSvg:"#f3f4f6",
+      status:"unresolved",
+      incidents:[
+        {date:"2026-06-01", site:"Sunshine", amount:140.00, pump:"Truck bay", paid:false, note:"Large diesel fill, $140. Commercial truck, signage removed/covered. High value — flagged for manager follow-up.", tone:"#7e5b5b"}
+      ]
+    },
+    {
+      rego:"7GH8JK", desc:"Black Mazda CX-5", colourSvg:"#e7e8ec",
+      status:"paid",
+      incidents:[
+        {date:"2026-04-28", site:"Pascoe Vale", amount:39.90, pump:"Pump 5", paid:true, note:"Honest mistake — drove off, called back within the hour and paid over the phone. Cleared.", tone:"#5b7e6b"}
+      ]
+    },
+    {
+      rego:"4MN5OP", desc:"Grey Hyundai i30", colourSvg:"#eaebef",
+      status:"cleared",
+      incidents:[
+        {date:"2026-03-19", site:"Sunshine", amount:0, pump:"Pump 2", paid:false, note:"Initially logged, but CCTV review showed payment did go through (terminal lag). No longer a suspect.", tone:"#7a7a82"}
+      ]
+    },
+    {
+      rego:"9QR0ST", desc:"Red Mitsubishi Triton", colourSvg:"#f6e3e6",
+      status:"unresolved",
+      incidents:[
+        {date:"2026-05-22", site:"Williamstown", amount:61.80, pump:"Pump 7", paid:false, note:"Unleaded 91, $61.80. Drove off at speed. Partial plate matched against prior near-miss.", tone:"#7e5b5b"}
+      ]
+    },
+    {
+      rego:"2CD3EF", desc:"Silver Kia Carnival", colourSvg:"#e9eaef",
+      status:"cleared",
+      incidents:[
+        {date:"2026-02-11", site:"Pascoe Vale", amount:0, pump:"Pump 1", paid:false, note:"Logged in error — wrong plate transcribed by night staff. Removed from active list.", tone:"#7a7a82"}
+      ]
     }
+  ];
+
+  /* ============ HELPERS ============ */
+  var $  = function(s,el){return (el||document).querySelector(s)};
+  var $$ = function(s,el){return Array.prototype.slice.call((el||document).querySelectorAll(s))};
+  function money(n){
+    return "$" + Number(n).toLocaleString("en-AU",{minimumFractionDigits:2,maximumFractionDigits:2});
   }
-
-  document.getElementById('searchBtn').addEventListener('click', runSearch);
-  input.addEventListener('keydown', function(e){ if(e.key === 'Enter') runSearch(); });
-
-  // example chips
-  var chips = document.querySelectorAll('.chip');
-  for(var i=0;i<chips.length;i++){
-    chips[i].addEventListener('click', function(){
-      input.value = this.getAttribute('data-rego');
-      runSearch();
+  function norm(s){ return String(s||"").toUpperCase().replace(/[^A-Z0-9]/g,""); }
+  function fmtDate(iso){
+    var p = iso.split("-"); // YYYY-MM-DD
+    var months=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    return parseInt(p[2],10)+" "+months[parseInt(p[1],10)-1]+" "+p[0];
+  }
+  function outstanding(rec){
+    return rec.incidents.reduce(function(s,i){ return s + (i.paid?0:Number(i.amount||0)); },0);
+  }
+  function sitesOf(rec){
+    var seen={}, list=[];
+    rec.incidents.forEach(function(i){ if(!seen[i.site]){seen[i.site]=1;list.push(i.site);} });
+    return list;
+  }
+  function statusLabel(s){
+    return s==="unresolved" ? "Unresolved" : s==="paid" ? "Paid" : "No longer a suspect";
+  }
+  function escapeHtml(s){
+    return String(s).replace(/[&<>"']/g,function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
     });
   }
 
-  // back buttons
-  var backs = document.querySelectorAll('[data-back]');
-  for(var b=0;b<backs.length;b++){
-    backs[b].addEventListener('click', function(){ input.value=''; show('search'); input.focus(); });
+  /* ============ RENDER ============ */
+  var output = $("#output");
+
+  function plateHtml(rego){
+    return '<div class="plate"><div class="st">VICTORIA</div><div class="num">'+escapeHtml(rego)+'</div></div>';
   }
 
-  // open log form
-  var opens = document.querySelectorAll('[data-open-log]');
-  for(var o=0;o<opens.length;o++){
-    opens[o].addEventListener('click', function(){ show('log'); });
+  function photoThumb(inc){
+    // SVG silhouette placeholder — NO real photos
+    return '<div class="photo-thumb" style="background:'+inc.tone+'">'
+      + '<span class="cam">CCTV</span>'
+      + '<svg viewBox="0 0 60 60" width="58" height="58" aria-hidden="true">'
+      +   '<rect width="60" height="60" fill="'+inc.tone+'"/>'
+      // car silhouette
+      +   '<g fill="rgba(255,255,255,.30)">'
+      +     '<path d="M8 40 Q10 30 18 28 L24 22 Q26 20 30 20 L40 20 Q44 20 46 24 L50 30 Q56 31 56 40 L56 44 L8 44 Z"/>'
+      +   '</g>'
+      +   '<g fill="rgba(0,0,0,.35)">'
+      +     '<circle cx="20" cy="45" r="5"/><circle cx="46" cy="45" r="5"/>'
+      +   '</g>'
+      +   '<g fill="rgba(255,255,255,.55)"><circle cx="20" cy="45" r="2"/><circle cx="46" cy="45" r="2"/></g>'
+      + '</svg></div>';
   }
+
+  function incidentHtml(inc){
+    var amtClass = inc.paid ? "inc-amt paid" : "inc-amt";
+    var statusPill = inc.paid
+      ? '<span class="inc-status paid">Paid</span>'
+      : (Number(inc.amount)>0 ? '<span class="inc-status unresolved">Unpaid</span>' : '<span class="inc-status paid">Cleared</span>');
+    return ''
+      + '<div class="incident">'
+      +   photoThumb(inc)
+      +   '<div class="inc-body">'
+      +     '<div class="inc-top">'
+      +       '<span class="inc-site">'+escapeHtml(inc.site)+'</span>'
+      +       '<span class="'+amtClass+'">'+(Number(inc.amount)>0?money(inc.amount):"—")+'</span>'
+      +     '</div>'
+      +     '<div class="inc-meta">'
+      +       '<span>'+fmtDate(inc.date)+'</span><span class="dot"></span>'
+      +       '<span>'+escapeHtml(inc.pump)+'</span><span class="dot"></span>'
+      +       statusPill
+      +     '</div>'
+      +     '<div class="inc-note">'+escapeHtml(inc.note)+'</div>'
+      +   '</div>'
+      + '</div>';
+  }
+
+  function cardHtml(rec, idx){
+    var owed = outstanding(rec);
+    var sites = sitesOf(rec);
+    var n = rec.incidents.length;
+    var amtClass = owed>0 ? "amount" : "amount zero";
+    var sitesStr = sites.join(", ");
+
+    var timeline = rec.incidents
+      .slice()
+      .sort(function(a,b){ return a.date<b.date?1:-1; }) // newest first
+      .map(incidentHtml).join("");
+
+    return ''
+    + '<div class="card" data-idx="'+idx+'">'
+    +   '<div class="card-head" role="button" tabindex="0" aria-expanded="false">'
+    +     plateHtml(rec.rego)
+    +     '<div class="card-info">'
+    +       '<div class="desc">'+escapeHtml(rec.desc)+'</div>'
+    +       '<div class="sub">'
+    +         '<span>'+n+' incident'+(n>1?'s':'')+'</span><span class="dot"></span>'
+    +         '<span>'+escapeHtml(sitesStr)+'</span>'
+    +       '</div>'
+    +     '</div>'
+    +     '<div class="card-right">'
+    +       '<span class="badge '+rec.status+'">'+statusLabel(rec.status)+'</span>'
+    +       '<span class="'+amtClass+'">'+(owed>0?money(owed):"Clear ✓")+'</span>'
+    +     '</div>'
+    +     '<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>'
+    +   '</div>'
+    +   '<div class="timeline-wrap"><div class="timeline-inner"><div class="timeline">'
+    +     '<div class="tl-head"><span class="t">Incident history</span><span class="sites">'+n+' record'+(n>1?'s':'')+' · '+sites.length+' site'+(sites.length>1?'s':'')+'</span></div>'
+    +     timeline
+    +     '<div class="tl-total"><span class="lab">Total outstanding</span><span class="val '+(owed>0?'':'')+'" style="color:'+(owed>0?'var(--red)':'var(--green)')+'">'+(owed>0?money(owed):"Nil — clear")+'</span></div>'
+    +   '</div></div></div>'
+    + '</div>';
+  }
+
+  function bannerHtml(matches){
+    // aggregate across matched records
+    var unresolvedRecs = matches.filter(function(r){ return outstanding(r)>0; });
+    if(unresolvedRecs.length){
+      var totalOwed=0, totalInc=0;
+      unresolvedRecs.forEach(function(r){
+        totalOwed += outstanding(r);
+        r.incidents.forEach(function(i){ if(!i.paid && Number(i.amount)>0) totalInc++; });
+      });
+      return ''
+      + '<div class="banner danger" role="alert">'
+      +   '<div class="bicon">⚠️</div>'
+      +   '<div class="btxt">'
+      +     '<div class="bt-title">PREPAY RECOMMENDED</div>'
+      +     '<div class="bt-sub">'+totalInc+' unresolved drive-off'+(totalInc>1?'s':'')+' · '+money(totalOwed)+' outstanding. Ask driver to pay before fuelling.</div>'
+      +   '</div>'
+      + '</div>';
+    }
+    // all resolved / paid / cleared
+    return ''
+    + '<div class="banner calm">'
+    +   '<div class="bicon">✅</div>'
+    +   '<div class="btxt">'
+    +     '<div class="bt-title">No outstanding drive-offs</div>'
+    +     '<div class="bt-sub">Prior records found, but all are paid or cleared. No action needed.</div>'
+    +   '</div>'
+    + '</div>';
+  }
+
+  function clearStateHtml(query){
+    return ''
+    + '<div class="clear-state">'
+    +   '<div class="big"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg></div>'
+    +   '<h3>No record found</h3>'
+    +   '<p>Vehicle <span class="rego-echo">'+escapeHtml(query)+'</span> is clear ✓<br/>No drive-off incidents on file.</p>'
+    + '</div>';
+  }
+
+  function emptyHintHtml(){
+    return ''
+    + '<div class="empty-hint">'
+    +   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>'
+    +   '<div>Search a registration plate to check the<br/>drive-off register, or tap a sample above.</div>'
+    + '</div>';
+  }
+
+  /* ============ SEARCH ============ */
+  function looksComplete(q){
+    // a "complete-looking plate": 5-7 alphanumerics
+    var len = norm(q).length;
+    return len >= 5 && len <= 7;
+  }
+
+  function search(rawQuery){
+    var q = String(rawQuery||"").trim();
+    if(!q){
+      render(emptyHintHtml());
+      return;
+    }
+    var nq = norm(q);
+    var matches = DATA.filter(function(r){ return norm(r.rego).indexOf(nq) !== -1; });
+
+    if(matches.length){
+      var html = bannerHtml(matches);
+      html += '<div class="resultmeta"><span>'+matches.length+' vehicle'+(matches.length>1?'s':'')+' found</span><span>tap a card to expand →</span></div>';
+      html += '<div class="cards">';
+      matches.forEach(function(r){
+        var idx = DATA.indexOf(r);
+        html += cardHtml(r, idx);
+      });
+      html += '</div>';
+      render(html);
+      // auto-expand if single result
+      if(matches.length===1){
+        var c = $(".card", output);
+        if(c) toggleCard(c, true);
+      }
+    } else {
+      // no match
+      if(looksComplete(q)){
+        render(clearStateHtml(q.toUpperCase()));
+      } else {
+        render('<div class="empty-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><div>No vehicle matches "<b>'+escapeHtml(q.toUpperCase())+'</b>".<br/>Keep typing a full plate to confirm it\'s clear.</div></div>');
+      }
+    }
+  }
+
+  function render(html){
+    output.innerHTML = html;
+    bindCards();
+  }
+
+  /* ============ CARD EXPAND ============ */
+  function toggleCard(card, force){
+    var willOpen = (typeof force==="boolean") ? force : !card.classList.contains("open");
+    card.classList.toggle("open", willOpen);
+    var head = $(".card-head", card);
+    if(head) head.setAttribute("aria-expanded", willOpen ? "true":"false");
+  }
+  function bindCards(){
+    $$(".card-head", output).forEach(function(head){
+      head.addEventListener("click", function(){ toggleCard(head.parentNode); });
+      head.addEventListener("keydown", function(e){
+        if(e.key==="Enter"||e.key===" "){ e.preventDefault(); toggleCard(head.parentNode); }
+      });
+    });
+  }
+
+  /* ============ WIRE SEARCH UI ============ */
+  var qInput = $("#q");
+  $("#searchBtn").addEventListener("click", function(){ search(qInput.value); });
+  qInput.addEventListener("keydown", function(e){ if(e.key==="Enter") search(qInput.value); });
+  // live search as you type (debounced-ish; data is tiny so direct is fine)
+  qInput.addEventListener("input", function(){ search(qInput.value); });
+
+  $$(".chip").forEach(function(chip){
+    chip.addEventListener("click", function(){
+      var r = chip.getAttribute("data-rego");
+      qInput.value = r;
+      search(r);
+      qInput.focus();
+      output.scrollIntoView({behavior:"smooth", block:"nearest"});
+    });
+  });
+
+  /* ============ MODAL ============ */
+  var overlay = $("#overlay");
+  var hasPhoto = false;
+  function openModal(){ overlay.classList.add("show"); document.body.style.overflow="hidden"; setTimeout(function(){$("#f-rego").focus();},300); }
+  function closeModal(){ overlay.classList.remove("show"); document.body.style.overflow=""; }
+  $("#openLog").addEventListener("click", openModal);
+  $("#cancelLog").addEventListener("click", closeModal);
+  overlay.addEventListener("click", function(e){ if(e.target===overlay) closeModal(); });
+  document.addEventListener("keydown", function(e){ if(e.key==="Escape" && overlay.classList.contains("show")) closeModal(); });
+
+  var uploader = $("#uploader");
+  uploader.addEventListener("click", function(){
+    hasPhoto = !hasPhoto;
+    uploader.classList.toggle("has", hasPhoto);
+    $("#uploaderText").textContent = hasPhoto ? "Photo attached ✓ (placeholder)" : "Tap to attach a photo (placeholder)";
+  });
+
+  $("#saveLog").addEventListener("click", function(){
+    var rego = ($("#f-rego").value||"").trim();
+    var desc = ($("#f-desc").value||"").trim();
+    var amt  = parseFloat($("#f-amt").value||"0")||0;
+    var site = $("#f-site").value;
+    var notes= ($("#f-notes").value||"").trim();
+
+    if(!rego){ $("#f-rego").focus(); $("#f-rego").style.borderColor="var(--red)"; return; }
+
+    var today = new Date();
+    var iso = today.getFullYear()+"-"+String(today.getMonth()+1).padStart(2,"0")+"-"+String(today.getDate()).padStart(2,"0");
+    var nq = norm(rego);
+    var existing = DATA.filter(function(r){ return norm(r.rego)===nq; })[0];
+    var incident = {
+      date: iso, site: site, amount: amt, pump: "Pump —", paid:false,
+      note: notes || "Logged via Drive-Off Register (demo). No further detail entered.",
+      tone:"#5b6b7e"
+    };
+
+    if(existing){
+      existing.incidents.unshift(incident);
+      if(existing.status!=="unresolved" && amt>0) existing.status="unresolved";
+    } else {
+      DATA.unshift({
+        rego: rego.toUpperCase(),
+        desc: desc || "Vehicle (description not entered)",
+        colourSvg:"#f3f4f6",
+        status: amt>0 ? "unresolved" : "cleared",
+        incidents:[incident]
+      });
+    }
+
+    // reset form
+    $("#f-rego").value=""; $("#f-desc").value=""; $("#f-amt").value="";
+    $("#f-notes").value=""; $("#f-site").selectedIndex=0;
+    $("#f-rego").style.borderColor="";
+    hasPhoto=false; uploader.classList.remove("has");
+    $("#uploaderText").textContent="Tap to attach a photo (placeholder)";
+
+    closeModal();
+    showToast("Incident logged for "+rego.toUpperCase());
+    // surface it
+    qInput.value = rego.toUpperCase();
+    setTimeout(function(){ search(rego.toUpperCase()); output.scrollIntoView({behavior:"smooth",block:"nearest"}); }, 380);
+  });
+
+  /* ============ TOAST ============ */
+  var toastTimer=null;
+  function showToast(msg){
+    $("#toastText").textContent = msg;
+    var t = $("#toast");
+    t.classList.add("show");
+    if(toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(function(){ t.classList.remove("show"); }, 2600);
+  }
+
+  /* ============ INIT ============ */
+  render(emptyHintHtml());
+
+})();
 </script>
 </body>
 </html>
