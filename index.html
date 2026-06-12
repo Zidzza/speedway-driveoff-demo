@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0F1115">
+<title>Speedway · Drive-Off Watch</title>
+<style>
+  :root{
+    --red:#D0021B;
+    --red-dark:#A80016;
+    --red-glow:rgba(208,2,27,.35);
+    --ink:#0F1115;
+    --ink-2:#171A20;
+    --ink-3:#1F232B;
+    --line:#2A2F3A;
+    --text:#F4F6FA;
+    --muted:#9AA3B2;
+    --green:#1FA463;
+    --green-bg:rgba(31,164,99,.12);
+    --amber:#E8A317;
+    --radius:16px;
+    --shadow:0 10px 40px rgba(0,0,0,.45);
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0}
+  body{
+    background:radial-gradient(1200px 600px at 50% -10%, #1a1d24 0%, var(--ink) 55%) fixed;
+    color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+    line-height:1.45;
+  }
+  .app{max-width:480px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column}
+
+  /* ---------- top bar ---------- */
+  .topbar{
+    display:flex;align-items:center;gap:10px;
+    padding:18px 20px 14px;
+    position:sticky;top:0;z-index:30;
+    background:linear-gradient(180deg, rgba(15,17,21,.96), rgba(15,17,21,.78));
+    backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--line);
+  }
+  .logo{display:flex;align-items:center;gap:9px;font-weight:900;letter-spacing:.5px;font-size:20px}
+  .logo .mark{
+    width:30px;height:30px;border-radius:8px;
+    background:linear-gradient(135deg,var(--red),var(--red-dark));
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 4px 14px var(--red-glow);
+    position:relative;overflow:hidden;
+  }
+  .logo .mark::before{
+    content:"";position:absolute;left:-2px;top:50%;transform:translateY(-50%) skewX(-18deg);
+    width:7px;height:42px;background:rgba(255,255,255,.9);border-radius:2px;
+    box-shadow:11px 0 0 rgba(255,255,255,.55), 20px 0 0 rgba(255,255,255,.3);
+  }
+  .logo .word{color:var(--text)}
+  .logo .word b{color:var(--red)}
+  .topbar .tag{margin-left:auto;font-size:10px;font-weight:700;letter-spacing:1px;color:var(--muted);
+    border:1px solid var(--line);padding:4px 8px;border-radius:999px;text-transform:uppercase}
+
+  /* ---------- demo banner ---------- */
+  .demobar{
+    display:none;
+    font-size:12px;font-weight:600;text-align:center;
+    padding:8px 14px;color:#ffd9dd;
+    background:linear-gradient(90deg, rgba(208,2,27,.18), rgba(208,2,27,.30), rgba(208,2,27,.18));
+    border-bottom:1px solid rgba(208,2,27,.4);
+  }
+  .demobar.on{display:block}
+
+  /* ---------- screens ---------- */
+  main{flex:1;position:relative}
+  .screen{display:none;padding:24px 20px 40px;animation:fade .45s cubic-bezier(.2,.7,.2,1)}
+  .screen.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+
+  /* ---------- search ---------- */
+  .hero{padding:18px 2px 6px}
+  .kicker{font-size:12px;font-weight:800;letter-spacing:2px;color:var(--red);text-transform:uppercase}
+  h1{font-size:28px;line-height:1.15;margin:8px 0 6px;font-weight:900;letter-spacing:-.4px}
+  .sub{color:var(--muted);font-size:14px;margin:0}
+  .searchwrap{margin-top:26px}
+  .plate{
+    position:relative;
+    background:linear-gradient(180deg,#fff,#eef1f5);
+    border-radius:14px;
+    padding:10px 10px 10px 14px;
+    box-shadow:var(--shadow), inset 0 0 0 3px #0F1115, inset 0 0 0 6px #fff;
+    display:flex;align-items:center;gap:10px;
+  }
+  .plate .au{display:flex;flex-direction:column;align-items:center;line-height:1;color:#0F1115;font-weight:800}
+  .plate .au .st{font-size:9px;letter-spacing:1px;color:var(--red)}
+  .plate .au .yr{font-size:13px;margin-top:2px}
+  .plate input{
+    flex:1;border:0;outline:0;background:transparent;
+    font-size:30px;font-weight:900;letter-spacing:5px;
+    text-transform:uppercase;color:#0F1115;width:100%;
+    font-family:"SF Mono",ui-monospace,Menlo,monospace;
+  }
+  .plate input::placeholder{color:#b9c0cb}
+  .btn{
+    width:100%;margin-top:14px;border:0;cursor:pointer;
+    background:linear-gradient(180deg,var(--red),var(--red-dark));
+    color:#fff;font-size:17px;font-weight:800;letter-spacing:.3px;
+    padding:16px;border-radius:14px;
+    box-shadow:0 8px 24px var(--red-glow);
+    transition:transform .12s ease, box-shadow .12s ease;
+  }
+  .btn:active{transform:translateY(1px) scale(.995);box-shadow:0 4px 14px var(--red-glow)}
+  .hint{margin-top:16px;color:var(--muted);font-size:13px;text-align:center}
+  .examples{display:flex;gap:8px;justify-content:center;margin-top:14px;flex-wrap:wrap}
+  .chip{
+    font-size:12px;font-weight:700;color:var(--text);
+    background:var(--ink-3);border:1px solid var(--line);
+    padding:7px 12px;border-radius:999px;cursor:pointer;transition:.15s;
+  }
+  .chip:active{transform:scale(.96)}
+  .chip b{color:var(--red)}
+  .staffnote{margin-top:30px;text-align:center;color:var(--muted);font-size:12px}
+
+  /* ---------- result header cards ---------- */
+  .backrow{display:flex;align-items:center;gap:8px;margin-bottom:16px}
+  .back{
+    background:var(--ink-3);border:1px solid var(--line);color:var(--text);
+    font-size:13px;font-weight:700;padding:9px 14px;border-radius:999px;cursor:pointer;
+    display:inline-flex;align-items:center;gap:6px;transition:.15s;
+  }
+  .back:active{transform:scale(.97)}
+
+  .alert{
+    border-radius:var(--radius);padding:20px;margin-bottom:18px;position:relative;overflow:hidden;
+    background:linear-gradient(160deg,var(--red),var(--red-dark));
+    box-shadow:0 12px 36px var(--red-glow);
+  }
+  .alert::after{content:"";position:absolute;inset:0;background:
+    repeating-linear-gradient(45deg, rgba(255,255,255,.05) 0 12px, transparent 12px 24px);pointer-events:none}
+  .alert .row1{display:flex;align-items:center;gap:8px;font-weight:900;font-size:15px}
+  .alert .plateBig{
+    font-family:"SF Mono",ui-monospace,Menlo,monospace;
+    font-size:38px;font-weight:900;letter-spacing:4px;margin:12px 0 4px;
+    background:#fff;color:#0F1115;display:inline-block;padding:6px 16px;border-radius:10px;
+    box-shadow:inset 0 0 0 3px #0F1115;
+  }
+  .alert .stat{display:flex;gap:22px;margin-top:14px;flex-wrap:wrap}
+  .alert .stat .lab{font-size:11px;opacity:.85;text-transform:uppercase;letter-spacing:1px;font-weight:700}
+  .alert .stat .val{font-size:22px;font-weight:900;margin-top:2px}
+  .riskbadge{
+    position:absolute;top:18px;right:18px;
+    background:#0F1115;color:#fff;font-size:11px;font-weight:900;letter-spacing:1px;
+    padding:6px 11px;border-radius:999px;border:1px solid rgba(255,255,255,.25);
+  }
+
+  .clean{
+    border-radius:var(--radius);padding:24px 20px;margin-bottom:18px;text-align:center;
+    background:linear-gradient(160deg, rgba(31,164,99,.16), rgba(31,164,99,.05));
+    border:1px solid rgba(31,164,99,.4);
+  }
+  .clean .check{
+    width:60px;height:60px;border-radius:50%;margin:0 auto 14px;
+    background:var(--green);display:flex;align-items:center;justify-content:center;
+    font-size:30px;color:#fff;box-shadow:0 8px 24px rgba(31,164,99,.4);
+  }
+  .clean h2{margin:0 0 6px;font-size:20px;font-weight:900}
+  .clean .plateBigC{font-family:"SF Mono",ui-monospace,Menlo,monospace;color:var(--green);font-weight:900}
+  .clean p{color:var(--muted);font-size:14px;margin:6px 0 0}
+
+  /* ---------- section + incident cards ---------- */
+  .sechead{display:flex;align-items:center;gap:8px;margin:22px 2px 12px;font-size:13px;
+    font-weight:800;letter-spacing:1px;color:var(--muted);text-transform:uppercase}
+  .sechead::after{content:"";flex:1;height:1px;background:var(--line)}
+
+  .card{
+    background:var(--ink-2);border:1px solid var(--line);border-radius:var(--radius);
+    padding:16px;margin-bottom:12px;box-shadow:0 6px 20px rgba(0,0,0,.25);
+    transition:.18s;
+  }
+  .card.out{border-left:4px solid var(--red)}
+  .card.paid{border-left:4px solid var(--green)}
+  .card .ch{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+  .card .site{font-weight:800;font-size:16px}
+  .card .date{color:var(--muted);font-size:12.5px;margin-top:2px}
+  .badge{font-size:11px;font-weight:900;letter-spacing:.5px;padding:5px 10px;border-radius:999px;white-space:nowrap}
+  .badge.out{background:rgba(208,2,27,.15);color:#ff8a96;border:1px solid rgba(208,2,27,.45)}
+  .badge.paid{background:var(--green-bg);color:#5fd79b;border:1px solid rgba(31,164,99,.45)}
+  .card .meta{display:flex;gap:18px;margin-top:14px;flex-wrap:wrap}
+  .card .meta .lab{font-size:10.5px;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);font-weight:700}
+  .card .meta .v{font-size:15px;font-weight:700;margin-top:2px}
+  .card .meta .v.amt{color:var(--red);font-size:18px;font-weight:900}
+  .card.paid .meta .v.amt{color:var(--green)}
+  .card .notes{
+    margin-top:14px;padding:10px 12px;background:var(--ink);border-radius:10px;
+    font-size:13px;color:#c7cdd8;border:1px solid var(--line);
+  }
+  .card .notes b{color:var(--muted);font-weight:700}
+
+  /* ---------- action buttons ---------- */
+  .actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:20px}
+  .abtn{
+    border:1px solid var(--line);background:var(--ink-3);color:var(--muted);
+    font-size:14px;font-weight:700;padding:14px 10px;border-radius:12px;
+    cursor:not-allowed;opacity:.65;display:flex;align-items:center;justify-content:center;gap:7px;
+    position:relative;
+  }
+  .abtn.primary{background:rgba(208,2,27,.12);border-color:rgba(208,2,27,.35);color:#ff9aa4}
+  .disabled-note{text-align:center;color:var(--muted);font-size:12px;margin-top:12px;font-style:italic}
+
+  /* ---------- log form (mockup) ---------- */
+  .field{margin-bottom:14px}
+  .field label{display:block;font-size:12px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+  .field input,.field select,.field textarea{
+    width:100%;background:var(--ink-2);border:1px solid var(--line);border-radius:12px;
+    color:var(--text);font-size:15px;padding:13px 14px;outline:none;font-family:inherit;
+  }
+  .field input:focus,.field select,.field textarea:focus{border-color:var(--red)}
+  .field textarea{resize:none;min-height:80px}
+  .uploadbtn{
+    width:100%;border:1.5px dashed var(--line);background:transparent;color:var(--muted);
+    padding:18px;border-radius:12px;font-weight:700;cursor:not-allowed;opacity:.7;
+    display:flex;align-items:center;justify-content:center;gap:8px;
+  }
+  .openlog{
+    display:inline-flex;align-items:center;gap:7px;margin-top:8px;
+    background:transparent;border:1px solid var(--line);color:var(--muted);
+    font-size:13px;font-weight:700;padding:11px 16px;border-radius:999px;cursor:pointer;transition:.15s;
+  }
+  .openlog:active{transform:scale(.97)}
+
+  /* ---------- footer ---------- */
+  footer{
+    text-align:center;padding:22px 20px 30px;color:var(--muted);font-size:11.5px;
+    border-top:1px solid var(--line);margin-top:auto;letter-spacing:.3px;
+  }
+  footer b{color:#c7cdd8;font-weight:700}
+  .lock{opacity:.7}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="topbar">
+    <div class="logo">
+      <span class="mark"></span>
+      <span class="word">SPEED<b>WAY</b></span>
+    </div>
+    <span class="tag">Network Tool</span>
+  </div>
+
+  <div class="demobar" id="demobar">⚠ This is a demo — no real data is stored or transmitted.</div>
+
+  <main>
+
+    <!-- ===================== SEARCH ===================== -->
+    <section class="screen active" id="screen-search">
+      <div class="hero">
+        <div class="kicker">Drive-Off Watch</div>
+        <h1>Network Search</h1>
+        <p class="sub">Check any registration plate against drive-off incidents recorded across the Speedway network.</p>
+      </div>
+
+      <div class="searchwrap">
+        <div class="plate">
+          <div class="au"><span class="st">★ AUS ★</span><span class="yr">REGO</span></div>
+          <input id="regoInput" maxlength="8" placeholder="ABC123" autocomplete="off" autocapitalize="characters" spellcheck="false" inputmode="text">
+        </div>
+        <button class="btn" id="searchBtn">Search the Network</button>
+        <p class="hint">Search across the Speedway network. <b style="color:#c7cdd8">Staff use only.</b></p>
+        <div class="examples">
+          <span class="chip" data-rego="1ABC234">Try <b>1ABC234</b></span>
+          <span class="chip" data-rego="XYZ999">Try <b>XYZ999</b></span>
+        </div>
+      </div>
+
+      <p class="staffnote">🔒 Authorised Speedway staff only · Activity is logged</p>
+    </section>
+
+    <!-- ===================== OFFENDER ===================== -->
+    <section class="screen" id="screen-offender">
+      <div class="backrow"><button class="back" data-back>‹ New search</button></div>
+
+      <div class="alert">
+        <span class="riskbadge">⬤ HIGH RISK</span>
+        <div class="row1">⚠ Known Offender — 3 incidents on record</div>
+        <div class="plateBig" id="offPlate">1ABC234</div>
+        <div class="stat">
+          <div><div class="lab">Outstanding balance</div><div class="val">$127.40</div></div>
+          <div><div class="lab">Across network</div><div class="val">3 sites</div></div>
+        </div>
+      </div>
+
+      <div class="sechead">Incident History</div>
+
+      <!-- Incident 1 -->
+      <div class="card out">
+        <div class="ch">
+          <div><div class="site">Speedway Morayfield</div><div class="date">14 May 2026 · 7:42am</div></div>
+          <span class="badge out">OUTSTANDING</span>
+        </div>
+        <div class="meta">
+          <div><div class="lab">Amount</div><div class="v amt">$62.30</div></div>
+          <div><div class="lab">Vehicle</div><div class="v">White Toyota Camry · 2018</div></div>
+        </div>
+        <div class="notes"><b>Notes · </b>Left before attendant could stop. Bowser 3.</div>
+      </div>
+
+      <!-- Incident 2 -->
+      <div class="card out">
+        <div class="ch">
+          <div><div class="site">Speedway North Lakes</div><div class="date">2 Mar 2026 · 6:15pm</div></div>
+          <span class="badge out">OUTSTANDING</span>
+        </div>
+        <div class="meta">
+          <div><div class="lab">Amount</div><div class="v amt">$41.10</div></div>
+          <div><div class="lab">Vehicle</div><div class="v">White Toyota Camry</div></div>
+        </div>
+        <div class="notes"><b>Notes · </b>Drove off at speed. Plate confirmed on CCTV.</div>
+      </div>
+
+      <!-- Incident 3 -->
+      <div class="card paid">
+        <div class="ch">
+          <div><div class="site">Speedway Caboolture</div><div class="date">18 Jan 2026 · 11:05am</div></div>
+          <span class="badge paid">PAID ✓</span>
+        </div>
+        <div class="meta">
+          <div><div class="lab">Amount</div><div class="v amt">$24.00</div></div>
+          <div><div class="lab">Vehicle</div><div class="v">White Camry · plate confirmed</div></div>
+        </div>
+        <div class="notes"><b>Notes · </b>Customer returned and paid in full. 20 Jan 2026.</div>
+      </div>
+
+      <div class="actions">
+        <button class="abtn primary" disabled>＋ Log New Incident</button>
+        <button class="abtn" disabled>✓ Mark as Paid</button>
+        <button class="abtn" disabled>🚓 Police Report</button>
+        <button class="abtn" disabled>⚑ Flag Resolved</button>
+      </div>
+      <p class="disabled-note">Demo mode — actions disabled</p>
+
+      <div style="text-align:center;margin-top:18px">
+        <button class="openlog" data-open-log>View incident logging form ›</button>
+      </div>
+    </section>
+
+    <!-- ===================== CLEAN ===================== -->
+    <section class="screen" id="screen-clean">
+      <div class="backrow"><button class="back" data-back>‹ New search</button></div>
+
+      <div class="clean">
+        <div class="check">✓</div>
+        <h2>No incidents found</h2>
+        <div style="font-size:17px;font-weight:800;margin-bottom:4px">for <span class="plateBigC" id="cleanPlate">XYZ999</span></div>
+        <p>This plate has no recorded drive-offs on the Speedway network.</p>
+      </div>
+
+      <div class="card" style="text-align:center">
+        <p style="margin:0 0 14px;color:var(--muted);font-size:14px">If you're logging a new incident for this plate, tap below.</p>
+        <button class="abtn primary" disabled style="cursor:not-allowed">＋ Log New Incident</button>
+        <p class="disabled-note" style="margin-top:14px">Demo mode — actions disabled</p>
+      </div>
+
+      <div style="text-align:center;margin-top:18px">
+        <button class="openlog" data-open-log>View incident logging form ›</button>
+      </div>
+    </section>
+
+    <!-- ===================== LOG FORM (mockup) ===================== -->
+    <section class="screen" id="screen-log">
+      <div class="backrow"><button class="back" data-back>‹ Back</button></div>
+      <div class="kicker">Drive-Off Watch</div>
+      <h1 style="font-size:24px;margin-bottom:18px">Log New Incident</h1>
+
+      <div class="field"><label>Registration plate</label><input value="1ABC234" readonly></div>
+      <div class="field"><label>Site</label>
+        <select disabled>
+          <option>Speedway Morayfield</option>
+          <option>Speedway North Lakes</option>
+          <option>Speedway Caboolture</option>
+          <option>Speedway Burpengary</option>
+        </select>
+      </div>
+      <div class="field"><label>Date &amp; time</label><input value="12 Jun 2026 · 2:30pm" readonly></div>
+      <div class="field"><label>Amount ($)</label><input value="58.40" readonly></div>
+      <div class="field"><label>Vehicle description</label><input value="White Toyota Camry" readonly></div>
+      <div class="field"><label>Photo / CCTV upload</label>
+        <button class="uploadbtn" disabled>📷 Tap to attach photo</button>
+      </div>
+      <div class="field"><label>Notes</label><textarea readonly>Drove off without paying. Bowser 2.</textarea></div>
+      <button class="abtn primary" disabled style="width:100%;margin-top:6px">Submit Incident</button>
+      <p class="disabled-note">Demo mode — form is read-only</p>
+    </section>
+
+  </main>
+
+  <footer>
+    <div>Speedway Fuel Network · <b>Confidential</b></div>
+    <div style="margin-top:6px" class="lock">🔒 For authorised staff use only</div>
+  </footer>
+</div>
+
+<script>
+  var screens = {
+    search:   document.getElementById('screen-search'),
+    offender: document.getElementById('screen-offender'),
+    clean:    document.getElementById('screen-clean'),
+    log:      document.getElementById('screen-log')
+  };
+  var demobar = document.getElementById('demobar');
+  var input = document.getElementById('regoInput');
+
+  function show(name){
+    for(var k in screens){ screens[k].classList.remove('active'); }
+    screens[name].classList.add('active');
+    demobar.classList.toggle('on', name !== 'search');
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  function runSearch(){
+    var raw = (input.value || '').toUpperCase().replace(/\s+/g,'').trim();
+    if(!raw){ input.focus(); return; }
+    // Simple string match: anything containing ABC -> known offender
+    if(raw.indexOf('ABC') !== -1){
+      document.getElementById('offPlate').textContent = raw;
+      show('offender');
+    } else {
+      document.getElementById('cleanPlate').textContent = raw;
+      show('clean');
+    }
+  }
+
+  document.getElementById('searchBtn').addEventListener('click', runSearch);
+  input.addEventListener('keydown', function(e){ if(e.key === 'Enter') runSearch(); });
+
+  // example chips
+  var chips = document.querySelectorAll('.chip');
+  for(var i=0;i<chips.length;i++){
+    chips[i].addEventListener('click', function(){
+      input.value = this.getAttribute('data-rego');
+      runSearch();
+    });
+  }
+
+  // back buttons
+  var backs = document.querySelectorAll('[data-back]');
+  for(var b=0;b<backs.length;b++){
+    backs[b].addEventListener('click', function(){ input.value=''; show('search'); input.focus(); });
+  }
+
+  // open log form
+  var opens = document.querySelectorAll('[data-open-log]');
+  for(var o=0;o<opens.length;o++){
+    opens[o].addEventListener('click', function(){ show('log'); });
+  }
+</script>
+</body>
+</html>
